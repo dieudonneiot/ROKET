@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host:
+    name: Core and tools (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release
+      - name: C unit tests
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Install the Python tools
+        run: python -m pip install -e "tools/ukb_tester[dev]"
+      - name: Lint Python
+        run: ruff check tools
+      - name: Check Python formatting
+        run: ruff format --check tools
+      - name: Python tests, including parity with the C core
+        env:
+          FC_CORE_LIB_DIR: build
+          FC_REQUIRE_CORE_LIB: "1"
+        run: python -m pytest tools/ukb_tester -q
+
+  cortex-m4:
+    name: Core cross-build (Cortex-M4F)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install the Arm GNU toolchain
+        run: sudo apt-get update && sudo apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi
+      - name: Configure
+        run: >
+          cmake -S . -B build-arm
+          -DCMAKE_TOOLCHAIN_FILE=cmake/arm-none-eabi-cortex-m4.cmake
+          -DCMAKE_BUILD_TYPE=MinSizeRel
+      - name: Build
+        run: cmake --build build-arm
+      - name: Code size
+        run: arm-none-eabi-size -t build-arm/firmware/core/libfc_core.a
+
+  c-format:
+    name: C formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install clang-format
+        run: python -m pip install clang-format==23.1.2
+      - name: Check formatting
+        run: >
+          clang-format --dry-run --Werror
+          firmware/core/include/fc/*.h firmware/core/src/*.c firmware/core/tests/*.c
