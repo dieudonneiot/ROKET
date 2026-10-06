@@ -1,0 +1,24 @@
+# Build output
+build/
+build-*/
+out/
+cmake-build-*/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Office lock files
+~$*

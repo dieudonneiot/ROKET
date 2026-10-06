@@ -1,0 +1,17 @@
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Motor files must stay byte-identical: the official one uses CR-only line
+# endings and still loads correctly (findings log F-68).
+*.eng -text
+*.rse -text
+
+*.ork binary
+*.docx binary
+*.xlsx binary
+*.pdf binary
+*.png binary
+*.jpg binary
