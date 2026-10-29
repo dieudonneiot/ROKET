@@ -440,7 +440,7 @@ static void test_session_flags_missing_sft_data(void)
 
 static void test_layout_for_python_bindings(void)
 {
-    TEST_ASSERT_EQUAL_UINT32(1u, fc_abi_version());
+    TEST_ASSERT_EQUAL_UINT32(2u, fc_abi_version());
     TEST_ASSERT_EQUAL_UINT(5u, att7_sizeof_config());
     TEST_ASSERT_EQUAL_UINT(32u, att7_sizeof_sample());
     TEST_ASSERT_EQUAL_UINT(36u, att7_sizeof_event());

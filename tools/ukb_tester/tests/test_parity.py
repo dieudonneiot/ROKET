@@ -122,7 +122,7 @@ CONFIGS = [
 
 
 def test_binary_interface(core):
-    assert core.fc_abi_version() == 1
+    assert core.fc_abi_version() == 2
     assert core.att7_sizeof_config() == ctypes.sizeof(CConfig)
     assert core.att7_sizeof_sample() == ctypes.sizeof(CSample)
     assert core.att7_sizeof_event() == ctypes.sizeof(CEvent)

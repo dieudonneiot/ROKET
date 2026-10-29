@@ -22,3 +22,6 @@ Thumbs.db
 
 # Office lock files
 ~$*
+
+# Exported chat histories (local only)
+chat-histories/
