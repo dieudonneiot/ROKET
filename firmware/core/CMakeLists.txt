@@ -1,6 +1,8 @@
 set(FC_CORE_SOURCES
     src/att7.c
     src/fc_info.c
+    src/flight.c
+    src/kf_vertical.c
 )
 
 add_library(fc_core STATIC ${FC_CORE_SOURCES})

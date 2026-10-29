@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 /* Bump whenever a public struct layout or function signature changes. */
-#define FC_ABI_VERSION 1u
+#define FC_ABI_VERSION 2u
 
 FC_API uint32_t fc_abi_version(void);
 
